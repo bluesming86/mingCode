@@ -1,0 +1,24 @@
+<mapper namespace="user">
+    <!-- select 标签， 封装了SQL语句信息、入参类型、结果映射类型
+        namespace + id 组成了 statmentId
+    -->
+    <select id="queryUserNameByParams"
+            resultType="com.ming.learning.mybatis.po.User"
+            statementType="prepared">
+
+        <!-- 是SqlSource ,封装了SQL源信息并且可以解析#{}和${} -->
+
+        Select *  from t_user   where sex = #{sex}
+        <if test="username != null and username != ''">
+            and username like '%${username}'
+        </if>
+        <!-- select 文本 、if where 标签啊，都是SqlNode;
+            sqlNode: 封装了SqlNode节点信息
+                   因为各个节点的不同，因此会有不同SqlNode 实现。
+
+            一个statment标签对应一个 SqlSource
+            一个SqlSurce 对应一棵 SqlNode 树。
+          -->
+    </select>
+
+</mapper>

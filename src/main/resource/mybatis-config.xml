@@ -1,0 +1,22 @@
+<configuration>
+    <!-- mybatis 数据源环境配置 -->
+    <environments default="dev">
+        <environment id="dev">
+            <!-- 配置数据源信息 -->
+            <dataSource type="DBCP">
+                <property name="db.driver" value="com.mysql.jdbc.Driver"></property>
+                <property name="db.url" value="jdbc:mysql://127.0.0.1:3306/ming?characterEncoding=utf-8"></property>
+                <property name="db.username" value="root"></property>
+                <property name="db.password" value="root"></property>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!--  映射文件 记载  对应 Configuration对象中MappedStatement集合 （是map集合）
+            其中key 是 statementId
+            value 是MappedStatement (即：映射文件中的crud标签 select 、 update 、delete、insert)
+    -->
+    <mappers>
+        <mapper resource="mapper/UserMapper.xml"></mapper>
+    </mappers>
+</configuration>
