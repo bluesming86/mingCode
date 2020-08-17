@@ -20,4 +20,11 @@ public class TextSqlNode implements SqlNode {
     public void apply(DynamicContext context) {
 
     }
+
+    public boolean isDynamic() {
+        if (sqlText != null){
+            return sqlText.indexOf("${") >= 0;
+        }
+        return false;
+    }
 }

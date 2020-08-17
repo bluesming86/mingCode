@@ -16,7 +16,7 @@ public class StaticTextSqlNode implements SqlNode {
     }
 
     @Override
-    public void apply(DynamicContext dc) {
-
+    public void apply(DynamicContext context) {
+        context.appendSql(sqlText);
     }
 }

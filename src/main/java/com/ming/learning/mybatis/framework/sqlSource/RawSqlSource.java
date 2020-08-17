@@ -1,6 +1,7 @@
 package com.ming.learning.mybatis.framework.sqlSource;
 
 import com.ming.learning.mybatis.framework.config.BoundSql;
+import com.ming.learning.mybatis.framework.config.DynamicContext;
 import com.ming.learning.mybatis.framework.sqlNode.SqlNode;
 
 /**
@@ -24,8 +25,13 @@ public class RawSqlSource implements SqlSource {
 
     public RawSqlSource(SqlNode mixedSqlNode) {
         //真正处理#{}的逻辑 要放再构造方法中
-
         //把处理之后的结果，封装成一个静态的sqlSource (StaticSqlSource)
+
+        //1.处理所有的Sql节点，获取合并之后的完整的sql语句（可能还带有#{}）
+        DynamicContext context = new DynamicContext(null);
+        mixedSqlNode.apply(context);
+        String sqlText = context.getSql();//合并后的sql语句
+        //2.调用SqlSource的处理逻辑，对#{}进行处理
 
     }
 

@@ -1,17 +1,16 @@
 package com.ming.learning.mybatis.test;
 
+import com.ming.learning.mybatis.framework.config.BoundSql;
 import com.ming.learning.mybatis.framework.config.Configuration;
 import com.ming.learning.mybatis.framework.config.MappedStatement;
 import com.ming.learning.mybatis.framework.config.ParameterMapping;
-import com.ming.learning.mybatis.framework.sqlNode.SqlNode;
+import com.ming.learning.mybatis.framework.sqlNode.*;
 import com.ming.learning.mybatis.framework.sqlSource.DynamicSqlSource;
 import com.ming.learning.mybatis.framework.sqlSource.RawSqlSource;
 import com.ming.learning.mybatis.framework.sqlSource.SqlSource;
 import com.ming.learning.mybatis.po.User;
 import org.apache.commons.dbcp.BasicDataSource;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
+import org.dom4j.*;
 import org.dom4j.io.SAXReader;
 import org.junit.Test;
 
@@ -162,7 +161,7 @@ public class MyBatisV2 {
     private SqlSource createSqlSource(Element selectElement) {
         //TODO 其他子标签的解析处理
         SqlSource sqlSource = parseScriptNode(selectElement);
-        return  null;
+        return  sqlSource;
     }
 
     private SqlSource parseScriptNode(Element selectElement) {
@@ -184,7 +183,45 @@ public class MyBatisV2 {
         List<SqlNode> sqlNodes = new ArrayList<>();
 
         //获取select 标签的子元素  文本类型 获取Element类型
-        return null;
+        int nodeCount = selectElement.nodeCount();
+        for (int i = 0; i < nodeCount; i++) {
+            Node node = selectElement.node(i);
+            if (node instanceof Text){
+                String text = node.getText();
+                if (text == null || "".equals(text.trim())){
+                    continue;
+                }
+
+                //先将Sql文本封装到TextNode 中
+                TextSqlNode textSqlNode = new TextSqlNode(text.trim());
+                if (textSqlNode.isDynamic()){
+                    sqlNodes.add(textSqlNode);
+                    isDynamic = true;
+                } else {
+                    sqlNodes.add(new StaticTextSqlNode(text.trim()));
+                }
+            } else if (node instanceof Element){
+                //是个动态标签，那么解析
+                isDynamic = true;
+
+                Element element = (Element) node;
+                if ("if".equals(element.getName())){
+                    //if 动态标签
+                    String test = element.attributeValue("test");
+                    //递归去解析子元素
+                    SqlNode sqlNode = parseDynamicTags(element);
+
+                    IfSqlNode ifSqlNode = new IfSqlNode(test, sqlNode);
+                    sqlNodes.add(ifSqlNode);
+                } else{
+                    //TODO  其他标签处理
+                }
+            } else {
+                //TODO
+            }
+        }
+
+        return new MixedSqlNode(sqlNodes);
     }
 
     /**
@@ -220,8 +257,6 @@ public class MyBatisV2 {
                 parseDataSource(element.element("dataSource"));
             }
         }
-
-
 
     }
 
@@ -294,8 +329,11 @@ public class MyBatisV2 {
             MappedStatement mappedStatement = configuration.getMappedStatementById(statementId);
             //1.连接获取
             conn = getConnection();
-            //TODO 2.Sql的获取 （SQLSource）
-            String sql = getSql(mappedStatement);
+            //TODO 2.Sql的获取 （SQLSource和SqlNode 的处理流程）
+            SqlSource sqlSource = mappedStatement.getSqlSource();
+            //触发SqlSource和SqlNode的解析处理流程
+            BoundSql boundSql = sqlSource.getBoundSql(param);
+            String sql = boundSql.getSql();
             //3 创建statement
             statement = createStatement(conn,mappedStatement, sql);
             //TODO 4.设置参数

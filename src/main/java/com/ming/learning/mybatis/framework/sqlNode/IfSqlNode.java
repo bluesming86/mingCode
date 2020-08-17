@@ -20,6 +20,7 @@ public class IfSqlNode implements SqlNode {
 
     @Override
     public void apply(DynamicContext context) {
+        //先ognl对test中内容进行判断（test属性值写的就是ognl表达式写法）
 
     }
 }
