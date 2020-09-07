@@ -12,6 +12,9 @@
         <if test="username != null and username != ''">
             and username like '%${username}'
         </if>
+        <if test="age != null and age != ''">
+            and age = #{age}
+        </if>
         <!-- select 文本 、if where 标签啊，都是SqlNode;
             sqlNode: 封装了SqlNode节点信息
                    因为各个节点的不同，因此会有不同SqlNode 实现。
@@ -21,4 +24,12 @@
           -->
     </select>
 
+    <select id="queryUserNameById"
+            resultType="com.ming.learning.mybatis.po.User"
+            statementType="prepared">
+
+        <!-- 是SqlSource ,封装了SQL源信息并且可以解析#{}和${} -->
+
+        Select *  from t_user   where id = #{id}
+    </select>
 </mapper>

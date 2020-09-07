@@ -38,7 +38,6 @@ public class RawSqlSource implements SqlSource {
     @Override
     public BoundSql getBoundSql(Object param) {
 
-
         return null;
     }
 }

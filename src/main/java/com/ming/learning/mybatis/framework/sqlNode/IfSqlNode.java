@@ -1,6 +1,7 @@
 package com.ming.learning.mybatis.framework.sqlNode;
 
 import com.ming.learning.mybatis.framework.config.DynamicContext;
+import com.ming.learning.mybatis.framework.utils.OgnlUtils;
 
 /**
  * 封装了带有if标签的动态标签
@@ -22,5 +23,10 @@ public class IfSqlNode implements SqlNode {
     public void apply(DynamicContext context) {
         //先ognl对test中内容进行判断（test属性值写的就是ognl表达式写法）
 
+        Object parameter = context.getBindings().get("_parameter");
+        boolean b = OgnlUtils.evaluateBoolean(test, parameter);
+        if (b){
+            mixedSqlNode.apply(context);
+        }
     }
 }
