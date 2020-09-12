@@ -1,7 +1,7 @@
 package com.ming.learning.design.strategy.cart;
 
 /**
- * 高级会员
+ * 高级会员  -- 具体策略类（ConcreteStrategy）
  * @Author ming
  * @time 2020/9/7 15:59
  */

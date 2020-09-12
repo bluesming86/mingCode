@@ -1,7 +1,7 @@
 package com.ming.learning.design.strategy.cart;
 
 /**
- * 价格类
+ * 价格类 --- 环境类（Context）
  * @Author ming
  * @time 2020/9/7 16:04
  */

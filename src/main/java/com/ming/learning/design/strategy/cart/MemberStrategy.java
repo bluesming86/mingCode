@@ -1,7 +1,7 @@
 package com.ming.learning.design.strategy.cart;
 
 /**
- * 抽象折扣 接口
+ * 抽象折扣 接口  -- 抽象策略类（Strategy）
  */
 public interface MemberStrategy {
 

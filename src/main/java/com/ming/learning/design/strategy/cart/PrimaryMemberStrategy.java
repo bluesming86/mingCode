@@ -1,7 +1,7 @@
 package com.ming.learning.design.strategy.cart;
 
 /**
- * 初级会员折扣类
+ * 初级会员折扣类 --- 具体策略类（ConcreteStrategy）
  * @Author ming
  * @time 2020/9/7 15:57
  */
